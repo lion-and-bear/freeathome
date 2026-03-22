@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	internal "github.com/pgerke/freeathome/v2/internal"
+	internal "github.com/lion-and-bear/freeathome/v2/internal"
 )
 
 // TestMainVersionSetting tests that the version and commit are set correctly.

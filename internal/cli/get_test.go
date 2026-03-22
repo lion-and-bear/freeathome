@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pgerke/freeathome/v2/pkg/freeathome"
+	"github.com/lion-and-bear/freeathome/v2/pkg/freeathome"
 	"github.com/spf13/viper"
 )
 

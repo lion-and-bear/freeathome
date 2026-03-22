@@ -2,11 +2,11 @@
 
 A client library for the BUSCH-JAEGER free@home local API implemented in Golang.
 
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/pgerke/freeathome)
-![CI](https://img.shields.io/github/actions/workflow/status/pgerke/freeathome/ci.yaml?style=flat-square)
-[![codecov](https://codecov.io/gh/pgerke/freeathome/branch/main/graph/badge.svg?token=UJQVXZ5PPM)](https://codecov.io/gh/pgerke/freeathome)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pgerke_freeathome&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=pgerke_freeathome)
-![License](https://img.shields.io/github/license/pgerke/freeathome?style=flat-square)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/lion-and-bear/freeathome)
+![CI](https://img.shields.io/github/actions/workflow/status/lion-and-bear/freeathome/ci.yaml?style=flat-square)
+[![codecov](https://codecov.io/gh/lion-and-bear/freeathome/branch/main/graph/badge.svg?token=UJQVXZ5PPM)](https://codecov.io/gh/lion-and-bear/freeathome)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lion-and-bear_freeathome&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lion-and-bear_freeathome)
+![License](https://img.shields.io/github/license/lion-and-bear/freeathome?style=flat-square)
 
 ## Installation
 
@@ -15,13 +15,13 @@ A client library for the BUSCH-JAEGER free@home local API implemented in Golang.
 To use this library in your own Go project, make sure your project is using Go modules. Then, run the following command to add the dependency:
 
 ```sh
-go get github.com/pgerke/freeathome@latest
+go get github.com/lion-and-bear/freeathome@latest
 ```
 
 You can then import the package in your code:
 
 ```go
-import "github.com/pgerke/freeathome/v2"
+import "github.com/lion-and-bear/freeathome/v2"
 ```
 
 This will give you access to the public API client and related utilities for interacting with a local free\@home SysAP.
@@ -52,7 +52,7 @@ make cli-build-docker
 make cli-build-docker-multiarch
 
 # Run with Docker
-docker run --rm ghcr.io/pgerke/freeathome-cli:latest --help
+docker run --rm ghcr.io/lion-and-bear/freeathome-cli:latest --help
 ```
 
 #### CLI Commands
@@ -168,11 +168,11 @@ The CLI tool provides a comprehensive interface for all free@home operations:
 
 ## Documentation
 
-The API documentation is available at https://pkg.go.dev/github.com/pgerke/freeathome.
+The API documentation is available at https://pkg.go.dev/github.com/lion-and-bear/freeathome.
 
 ## I found a bug, what do I do?
 
-I'm happy to hear any feedback regarding the library or it's implementation, be it critizism, praise or rants. Please create a [GitHub issue](https://github.com/pgerke/freeathome/issues) or drop me an [email](mailto:info@philipgerke.com) if you would like to contact me.
+I'm happy to hear any feedback regarding the library or it's implementation, be it critizism, praise or rants. Please create a [GitHub issue](https://github.com/lion-and-bear/freeathome/issues) or drop me an [email](mailto:info@philipgerke.com) if you would like to contact me.
 
 I would especially appreciate, if you could report any issues you encounter while using the library. Issues I know about, I can probably fix.
 
@@ -187,7 +187,7 @@ While creating a bug report, please make it easy for me to fix it by giving us a
 
 ## I have a feature request, what do I do?
 
-Please create a [GitHub issue](https://github.com/pgerke/freeathome/issues) or drop me an [email](mailto:info@philipgerke.com)!
+Please create a [GitHub issue](https://github.com/lion-and-bear/freeathome/issues) or drop me an [email](mailto:info@philipgerke.com)!
 
 ## Non-Affiliation Disclaimer
 

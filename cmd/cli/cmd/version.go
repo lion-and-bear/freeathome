@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	internal "github.com/pgerke/freeathome/v2/internal"
+	internal "github.com/lion-and-bear/freeathome/v2/internal"
 	"github.com/spf13/cobra"
 )
 

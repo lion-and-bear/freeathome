@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pgerke/freeathome/v2/pkg/models"
+	"github.com/lion-and-bear/freeathome/v2/pkg/models"
 )
 
 // TestSystemAccessPointGetConfiguration tests the GetConfiguration method of SystemAccessPoint.

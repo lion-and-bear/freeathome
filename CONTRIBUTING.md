@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the free@home API Client! This do
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/pgerke/freeathome.git
+   git clone https://github.com/lion-and-bear/freeathome.git
    cd freeathome
    ```
 2. Initialize Go modules:

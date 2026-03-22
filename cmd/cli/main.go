@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pgerke/freeathome/v2/cmd/cli/cmd"
-	internal "github.com/pgerke/freeathome/v2/internal"
+	"github.com/lion-and-bear/freeathome/v2/cmd/cli/cmd"
+	internal "github.com/lion-and-bear/freeathome/v2/internal"
 )
 
 // version is the version of the application. The value will be overridden by the linker during the build process.
