@@ -27,7 +27,7 @@ RUN addgroup -S app && \
 
 # === Runtime Stage (Scratch) ===
 FROM scratch
-LABEL org.opencontainers.image.source=https://github.com/pgerke/freeathome
+LABEL org.opencontainers.image.source=https://github.com/lion-and-bear/freeathome
 LABEL org.opencontainers.image.description="The free@home CLI application"
 LABEL org.opencontainers.image.licenses=MIT
 

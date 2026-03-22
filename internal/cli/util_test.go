@@ -11,7 +11,7 @@ import (
 	"log/slog"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/pgerke/freeathome/v2/pkg/freeathome"
+	"github.com/lion-and-bear/freeathome/v2/pkg/freeathome"
 	"github.com/spf13/viper"
 )
 

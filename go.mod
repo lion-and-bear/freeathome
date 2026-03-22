@@ -1,4 +1,4 @@
-module github.com/pgerke/freeathome/v2
+module github.com/lion-and-bear/freeathome/v2
 
 go 1.26
 

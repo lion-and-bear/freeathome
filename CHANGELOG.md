@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Go module path**: The module is now `github.com/lion-and-bear/freeathome/v2` (repository moved to the `lion-and-bear` GitHub organization). Update `import` paths and `go get` accordingly.
+
 ## [v2.4.0] - 22.02.2026
 
 ### Changed
@@ -89,15 +95,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Set proxy device value
 - [#16] Implemented monitor application covering the scope of the [JavaScript free@home Monitor](https://github.com/pgerke/freeathome-monitor)
 
-[Unreleased]: https://github.com/pgerke/freeathome/compare/2.4.0...HEAD
-[v2.4.0]: https://github.com/pgerke/freeathome/releases/tag/2.4.0
-[v2.3.0]: https://github.com/pgerke/freeathome/releases/tag/2.3.0
-[v2.2.0]: https://github.com/pgerke/freeathome/releases/tag/2.2.0
-[v2.1.0]: https://github.com/pgerke/freeathome/releases/tag/2.1.0
-[v2.0.0]: https://github.com/pgerke/freeathome/releases/tag/2.0.0
-[v1.0.0]: https://github.com/pgerke/freeathome/releases/tag/1.0.0
-[#41]: https://github.com/pgerke/freeathome/issues/41
-[#28]: https://github.com/pgerke/freeathome/issues/28
-[#33]: https://github.com/pgerke/freeathome/issues/33
-[#7]: https://github.com/pgerke/freeathome/issues/7
-[#16]: https://github.com/pgerke/freeathome/issues/16
+[Unreleased]: https://github.com/lion-and-bear/freeathome/compare/2.4.0...HEAD
+[v2.4.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.4.0
+[v2.3.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.3.0
+[v2.2.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.2.0
+[v2.1.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.1.0
+[v2.0.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.0.0
+[v1.0.0]: https://github.com/lion-and-bear/freeathome/releases/tag/1.0.0
+[#41]: https://github.com/lion-and-bear/freeathome/issues/41
+[#28]: https://github.com/lion-and-bear/freeathome/issues/28
+[#33]: https://github.com/lion-and-bear/freeathome/issues/33
+[#7]: https://github.com/lion-and-bear/freeathome/issues/7
+[#16]: https://github.com/lion-and-bear/freeathome/issues/16

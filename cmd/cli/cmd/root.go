@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/pgerke/freeathome/v2/internal/cli"
+	"github.com/lion-and-bear/freeathome/v2/internal/cli"
 	"github.com/spf13/cobra"
 )
 
