@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v2.5.0] - 22.03.2026
 
 ### Changed
 
+- Bump dependencies
 - **Go module path**: The module is now `github.com/lion-and-bear/freeathome/v2` (repository moved to the `lion-and-bear` GitHub organization). Update `import` paths and `go get` accordingly.
 
 ## [v2.4.0] - 22.02.2026
@@ -95,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Set proxy device value
 - [#16] Implemented monitor application covering the scope of the [JavaScript free@home Monitor](https://github.com/pgerke/freeathome-monitor)
 
-[Unreleased]: https://github.com/lion-and-bear/freeathome/compare/2.4.0...HEAD
+[Unreleased]: https://github.com/lion-and-bear/freeathome/compare/2.5.0...HEAD
+[v2.5.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.5.0
 [v2.4.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.4.0
 [v2.3.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.3.0
 [v2.2.0]: https://github.com/lion-and-bear/freeathome/releases/tag/2.2.0

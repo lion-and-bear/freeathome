@@ -4,8 +4,8 @@ A client library for the BUSCH-JAEGER free@home local API implemented in Golang.
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/lion-and-bear/freeathome)
 ![CI](https://img.shields.io/github/actions/workflow/status/lion-and-bear/freeathome/ci.yaml?style=flat-square)
-[![codecov](https://codecov.io/gh/lion-and-bear/freeathome/branch/main/graph/badge.svg?token=UJQVXZ5PPM)](https://codecov.io/gh/lion-and-bear/freeathome)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lion-and-bear_freeathome&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lion-and-bear_freeathome)
+[![codecov](https://codecov.io/gh/lion-and-bear/freeathome/graph/badge.svg?token=BxNm16no5w)](https://codecov.io/gh/lion-and-bear/freeathome)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=freeathome&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=freeathome)
 ![License](https://img.shields.io/github/license/lion-and-bear/freeathome?style=flat-square)
 
 ## Installation
