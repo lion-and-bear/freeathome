@@ -19,6 +19,7 @@ func TestMonitorCommandConfig(t *testing.T) {
 		Timeout:                 30,
 		MaxReconnectionAttempts: 3,
 		ExponentialBackoff:      true,
+		Raw:                     false,
 	}
 
 	assert.NotNil(t, config.Viper)
@@ -28,6 +29,7 @@ func TestMonitorCommandConfig(t *testing.T) {
 	assert.Equal(t, 30, config.Timeout)
 	assert.Equal(t, 3, config.MaxReconnectionAttempts)
 	assert.True(t, config.ExponentialBackoff)
+	assert.False(t, config.Raw)
 }
 
 func TestSetupMonitorWithInvalidConfig(t *testing.T) {

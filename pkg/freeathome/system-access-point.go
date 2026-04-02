@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"regexp"
 
 	"github.com/go-resty/resty/v2"
@@ -30,6 +31,9 @@ type Config struct {
 	Logger models.Logger
 	// Client is the REST client to use (optional, will create default if nil)
 	Client *resty.Client
+	// WebSocketRawOutput, when non-nil, receives each WebSocket text frame as written on the wire
+	// plus a trailing newline; datapoint parsing and structured logs for that frame are skipped.
+	WebSocketRawOutput io.Writer
 }
 
 // NewConfig creates a new Config with default values
@@ -134,6 +138,12 @@ func (sysAp *SystemAccessPoint) GetSkipTLSVerify() bool {
 // VerboseErrors returns whether verbose errors should be logged.
 func (sysAp *SystemAccessPoint) GetVerboseErrors() bool {
 	return sysAp.config.VerboseErrors
+}
+
+// SetWebSocketRawOutput sets the writer that receives raw WebSocket text frames (see Config.WebSocketRawOutput).
+// Pass nil to disable.
+func (sysAp *SystemAccessPoint) SetWebSocketRawOutput(w io.Writer) {
+	sysAp.config.WebSocketRawOutput = w
 }
 
 // GetUrl constructs a URL string for the SystemAccessPoint based on the provided path.

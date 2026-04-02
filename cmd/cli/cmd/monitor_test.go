@@ -45,6 +45,11 @@ func TestMonitorCmdFlags(t *testing.T) {
 	logLevelFlag := flags.Lookup("log-level")
 	assert.NotNil(t, logLevelFlag)
 	assert.Equal(t, "info", logLevelFlag.DefValue)
+
+	// Check raw flag
+	rawFlag := flags.Lookup("raw")
+	assert.NotNil(t, rawFlag)
+	assert.Equal(t, "false", rawFlag.DefValue)
 }
 
 func TestMonitorCmdInRoot(t *testing.T) {

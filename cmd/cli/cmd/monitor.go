@@ -12,6 +12,7 @@ var (
 	timeout                 int
 	maxReconnectionAttempts int
 	exponentialBackoff      bool
+	monitorRaw              bool
 	// Inherit common flags from other commands
 	monitorTLSEnabled    bool
 	monitorSkipTLSVerify bool
@@ -21,8 +22,9 @@ var (
 var monitorCmd = &cobra.Command{
 	Use:   "monitor",
 	Short: "Monitor the free@home system access point via WebSocket",
-	Long:  `Connect to the free@home system access point via WebSocket and monitor real-time events.`,
-	RunE:  runMonitor,
+	Long: `Connect to the free@home system access point via WebSocket and monitor real-time events.
+With --raw, each WebSocket text frame is written unchanged to stdout (one line per message); hints and logs go to stderr.`,
+	RunE: runMonitor,
 }
 
 func init() {
@@ -32,6 +34,7 @@ func init() {
 	monitorCmd.Flags().IntVar(&timeout, "timeout", 30, "WebSocket connection timeout in seconds")
 	monitorCmd.Flags().IntVar(&maxReconnectionAttempts, "max-reconnection-attempts", 3, "Maximum number of reconnection attempts before giving up")
 	monitorCmd.Flags().BoolVar(&exponentialBackoff, "exponential-backoff", true, "Enable exponential backoff between reconnection attempts")
+	monitorCmd.Flags().BoolVar(&monitorRaw, "raw", false, "Stream raw WebSocket text frames to stdout (newline-terminated); use stderr for hints and logs")
 
 	// Add TLS configuration flags
 	monitorCmd.Flags().BoolVar(&monitorTLSEnabled, "tls", true, "Enable TLS for connection")
@@ -52,5 +55,6 @@ func runMonitor(cmd *cobra.Command, args []string) error {
 		Timeout:                 timeout,
 		MaxReconnectionAttempts: maxReconnectionAttempts,
 		ExponentialBackoff:      exponentialBackoff,
+		Raw:                     monitorRaw,
 	})
 }

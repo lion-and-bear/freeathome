@@ -1,6 +1,7 @@
 package freeathome
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -95,6 +96,47 @@ func TestSystemAccessPointWebSocketMessageHandler(t *testing.T) {
 	// Verify invalid format message handling
 	if !strings.Contains(logOutput, "Ignored datapoint with invalid key format") {
 		t.Errorf("Expected log output to contain 'Ignored datapoint with invalid key format', got: %s", logOutput)
+	}
+}
+
+func TestProcessMessageWebSocketRawOutput(t *testing.T) {
+	ws, buf, _ := setupSysApWebSocket(t, true, false)
+
+	var rawBuf bytes.Buffer
+	ws.sysAp.SetWebSocketRawOutput(&rawBuf)
+
+	validMessage := models.WebSocketMessage{
+		models.EmptyUUID: models.Message{
+			Datapoints: map[string]string{
+				"ABB7F595EC47/ch0000/odp0000": "1",
+			},
+		},
+	}
+	validMessageBytes, err := json.Marshal(validMessage)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+
+	ws.processMessage(validMessageBytes)
+
+	want := string(validMessageBytes) + "\n"
+	if rawBuf.String() != want {
+		t.Errorf("raw output: got %q want %q", rawBuf.String(), want)
+	}
+	logOutput := buf.String()
+	if strings.Contains(logOutput, "data point update") {
+		t.Errorf("expected no datapoint log in raw mode, got: %s", logOutput)
+	}
+
+	// Invalid JSON is still written as-is; no unmarshal error log in raw mode
+	rawBuf.Reset()
+	buf.Reset()
+	ws.processMessage([]byte(`not json`))
+	if rawBuf.String() != "not json\n" {
+		t.Errorf("raw invalid JSON: got %q", rawBuf.String())
+	}
+	if strings.Contains(buf.String(), "failed to unmarshal message") {
+		t.Errorf("expected no unmarshal error log in raw mode, got: %s", buf.String())
 	}
 }
 

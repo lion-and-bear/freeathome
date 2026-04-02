@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,6 +17,8 @@ type MonitorCommandConfig struct {
 	Timeout                 int
 	MaxReconnectionAttempts int
 	ExponentialBackoff      bool
+	// Raw, when true, streams WebSocket text frames to stdout; user hints go to stderr.
+	Raw bool
 }
 
 // Monitor connects to the free@home system access point via WebSocket and monitors real-time events
@@ -24,6 +27,12 @@ func Monitor(config MonitorCommandConfig) error {
 	sysAp, err := setupFunc(config.CommandConfig, "")
 	if err != nil {
 		return err
+	}
+
+	var hintOut io.Writer = os.Stdout
+	if config.Raw {
+		sysAp.SetWebSocketRawOutput(os.Stdout)
+		hintOut = os.Stderr
 	}
 
 	// Create context with cancellation for graceful shutdown
@@ -61,17 +70,17 @@ func Monitor(config MonitorCommandConfig) error {
 	go func() {
 		// First signal triggers graceful shutdown
 		<-sigs
-		fmt.Println("Exit signal received, shutting down gracefully...")
-		fmt.Println("Press Ctrl+C to force exit")
+		_, _ = fmt.Fprintln(hintOut, "Exit signal received, shutting down gracefully...")
+		_, _ = fmt.Fprintln(hintOut, "Press Ctrl+C to force exit")
 		cancel()
 
 		// Second signal triggers immediate, forced shutdown
 		<-sigs
-		fmt.Println("\nSecond exit signal received, shutting down immediately...")
+		_, _ = fmt.Fprintln(hintOut, "\nSecond exit signal received, shutting down immediately...")
 		shutdown <- fmt.Errorf("forced shutdown requested")
 	}()
 
-	fmt.Println("Press 'q' or Ctrl+C to exit")
+	_, _ = fmt.Fprintln(hintOut, "Press 'q' or Ctrl+C to exit")
 
 	// Connect to the system access point websocket
 	timeout := time.Duration(config.Timeout) * time.Second
