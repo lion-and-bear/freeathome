@@ -38,11 +38,27 @@ func TestNoConfigErrors(t *testing.T) {
 // TestMustNewSystemAccessPoint tests that MustNewSystemAccessPoint panics when a nil config is passed to NewSystemAccessPoint.
 func TestMustNewSystemAccessPoint(t *testing.T) {
 	defer func() {
-		if r := recover(); r == nil {
+		if recover() == nil {
 			t.Errorf("Expected panic, got nil")
 		}
 	}()
 	MustNewSystemAccessPoint(nil)
+}
+
+func TestSystemAccessPointWebSocketRawOutputGetter(t *testing.T) {
+	sysAp, _, _ := setupSysAp(t, true, false)
+	if sysAp.GetWebSocketRawOutput() != nil {
+		t.Fatal("expected nil before set")
+	}
+	var buf bytes.Buffer
+	sysAp.SetWebSocketRawOutput(&buf)
+	if sysAp.GetWebSocketRawOutput() != &buf {
+		t.Fatal("getter should return configured writer")
+	}
+	sysAp.SetWebSocketRawOutput(nil)
+	if sysAp.GetWebSocketRawOutput() != nil {
+		t.Fatal("expected nil after clear")
+	}
 }
 
 // TestSystemAccessPointGetHostName tests the GetHostName method of SystemAccessPoint.

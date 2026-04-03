@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
   -o /app/fh /app/cmd/cli/main.go
 
 # === Bonus Stage: Create non-root user ===
-FROM alpine:3.22 AS security_provider
+FROM alpine:3.23 AS security_provider
 RUN addgroup -S app && \
     adduser -S app -G app
 

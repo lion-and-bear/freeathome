@@ -9,6 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/lion-and-bear/freeathome/v2/pkg/freeathome"
 )
 
 // MonitorCommandConfig is a struct that contains the configuration for the monitor command
@@ -21,6 +23,22 @@ type MonitorCommandConfig struct {
 	Raw bool
 }
 
+// monitorConnectWebSocket runs the WebSocket loop; replaced in tests.
+var monitorConnectWebSocket = func(ctx context.Context, sysAp *freeathome.SystemAccessPoint, config MonitorCommandConfig) error {
+	timeout := time.Duration(config.Timeout) * time.Second
+	return sysAp.ConnectWebSocket(ctx, config.MaxReconnectionAttempts, config.ExponentialBackoff, timeout)
+}
+
+// applyMonitorRawMode applies the raw mode to the system access point
+func applyMonitorRawMode(sysAp *freeathome.SystemAccessPoint, raw bool) io.Writer {
+	var hintOut io.Writer = os.Stdout
+	if raw {
+		sysAp.SetWebSocketRawOutput(os.Stdout)
+		hintOut = os.Stderr
+	}
+	return hintOut
+}
+
 // Monitor connects to the free@home system access point via WebSocket and monitors real-time events
 func Monitor(config MonitorCommandConfig) error {
 	// Setup system access point
@@ -29,11 +47,8 @@ func Monitor(config MonitorCommandConfig) error {
 		return err
 	}
 
-	var hintOut io.Writer = os.Stdout
-	if config.Raw {
-		sysAp.SetWebSocketRawOutput(os.Stdout)
-		hintOut = os.Stderr
-	}
+	// Apply raw mode to the system access point
+	hintOut := applyMonitorRawMode(sysAp, config.Raw)
 
 	// Create context with cancellation for graceful shutdown
 	ctx, cancel := context.WithCancel(context.Background())
@@ -83,9 +98,8 @@ func Monitor(config MonitorCommandConfig) error {
 	_, _ = fmt.Fprintln(hintOut, "Press 'q' or Ctrl+C to exit")
 
 	// Connect to the system access point websocket
-	timeout := time.Duration(config.Timeout) * time.Second
 	go func() {
-		shutdown <- sysAp.ConnectWebSocket(ctx, config.MaxReconnectionAttempts, config.ExponentialBackoff, timeout)
+		shutdown <- monitorConnectWebSocket(ctx, sysAp, config)
 	}()
 
 	// Handle both forced shutdown and WebSocket connection errors

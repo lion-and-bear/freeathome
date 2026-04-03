@@ -99,6 +99,73 @@ func TestSystemAccessPointWebSocketMessageHandler(t *testing.T) {
 	}
 }
 
+func TestProcessMessageWebSocketRawOutputWriteError(t *testing.T) {
+	ws, buf, _ := setupSysApWebSocket(t, true, false)
+
+	errSeen := 0
+	ws.sysAp.onError = func(err error) {
+		if err != nil && err.Error() == "write failed" {
+			errSeen++
+		}
+	}
+	ws.sysAp.SetWebSocketRawOutput(failWriter{})
+	ws.processMessage([]byte(`{}`))
+
+	if errSeen != 1 {
+		t.Errorf("expected onError once for write failure, got %d", errSeen)
+	}
+	logOutput := buf.String()
+	if !strings.Contains(logOutput, "failed to write raw web socket message") {
+		t.Errorf("expected log about raw write failure, got: %s", logOutput)
+	}
+}
+
+type failWriter struct{}
+
+func (failWriter) Write(_ []byte) (n int, err error) {
+	return 0, errors.New("write failed")
+}
+
+func TestWebSocketMessageLoopTextMessageRawSkipsDebugLog(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+	defer cancel()
+
+	ws, buf, _ := setupSysApWebSocket(t, true, false)
+	ws.sysAp.SetWebSocketRawOutput(&bytes.Buffer{})
+
+	webSocketMessageChannel := make(chan []byte, 10)
+	messageReceivedChannel := make(chan struct{}, 1)
+
+	conn := &MockConn{
+		messageType: websocket.TextMessage,
+		r:           []byte(testMessageValid),
+		err:         nil,
+	}
+
+	go func() {
+		err := ws.webSocketMessageLoop(ctx, messageReceivedChannel, webSocketMessageChannel, conn)
+		if err == nil {
+			t.Error(expectedErrorGotNil)
+		}
+	}()
+
+	message := <-webSocketMessageChannel
+	cancel()
+	<-ctx.Done()
+	close(webSocketMessageChannel)
+	close(messageReceivedChannel)
+	ws.waitGroup.Wait()
+
+	if string(message) != testMessageValid {
+		t.Errorf("Expected message %q, got: %s", testMessageValid, string(message))
+	}
+
+	logOutput := buf.String()
+	if strings.Contains(logOutput, "received text message from web socket") {
+		t.Errorf("did not expect debug log when raw output is set, got: %s", logOutput)
+	}
+}
+
 func TestProcessMessageWebSocketRawOutput(t *testing.T) {
 	ws, buf, _ := setupSysApWebSocket(t, true, false)
 
