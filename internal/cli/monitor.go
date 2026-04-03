@@ -4,10 +4,13 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/lion-and-bear/freeathome/v2/pkg/freeathome"
 )
 
 // MonitorCommandConfig is a struct that contains the configuration for the monitor command
@@ -16,6 +19,24 @@ type MonitorCommandConfig struct {
 	Timeout                 int
 	MaxReconnectionAttempts int
 	ExponentialBackoff      bool
+	// Raw, when true, streams WebSocket text frames to stdout; user hints go to stderr.
+	Raw bool
+}
+
+// monitorConnectWebSocket runs the WebSocket loop; replaced in tests.
+var monitorConnectWebSocket = func(ctx context.Context, sysAp *freeathome.SystemAccessPoint, config MonitorCommandConfig) error {
+	timeout := time.Duration(config.Timeout) * time.Second
+	return sysAp.ConnectWebSocket(ctx, config.MaxReconnectionAttempts, config.ExponentialBackoff, timeout)
+}
+
+// applyMonitorRawMode applies the raw mode to the system access point
+func applyMonitorRawMode(sysAp *freeathome.SystemAccessPoint, raw bool) io.Writer {
+	var hintOut io.Writer = os.Stdout
+	if raw {
+		sysAp.SetWebSocketRawOutput(os.Stdout)
+		hintOut = os.Stderr
+	}
+	return hintOut
 }
 
 // Monitor connects to the free@home system access point via WebSocket and monitors real-time events
@@ -25,6 +46,9 @@ func Monitor(config MonitorCommandConfig) error {
 	if err != nil {
 		return err
 	}
+
+	// Apply raw mode to the system access point
+	hintOut := applyMonitorRawMode(sysAp, config.Raw)
 
 	// Create context with cancellation for graceful shutdown
 	ctx, cancel := context.WithCancel(context.Background())
@@ -47,7 +71,8 @@ func Monitor(config MonitorCommandConfig) error {
 			default:
 				char, _, err := reader.ReadRune()
 				if err != nil {
-					break
+					// break would only exit the select; EOF or any read error must end the goroutine
+					return
 				}
 				if char == 'q' || char == 'Q' {
 					// Send SIGINT to trigger graceful shutdown
@@ -61,22 +86,21 @@ func Monitor(config MonitorCommandConfig) error {
 	go func() {
 		// First signal triggers graceful shutdown
 		<-sigs
-		fmt.Println("Exit signal received, shutting down gracefully...")
-		fmt.Println("Press Ctrl+C to force exit")
+		_, _ = fmt.Fprintln(hintOut, "Exit signal received, shutting down gracefully...")
+		_, _ = fmt.Fprintln(hintOut, "Press Ctrl+C to force exit")
 		cancel()
 
 		// Second signal triggers immediate, forced shutdown
 		<-sigs
-		fmt.Println("\nSecond exit signal received, shutting down immediately...")
+		_, _ = fmt.Fprintln(hintOut, "\nSecond exit signal received, shutting down immediately...")
 		shutdown <- fmt.Errorf("forced shutdown requested")
 	}()
 
-	fmt.Println("Press 'q' or Ctrl+C to exit")
+	_, _ = fmt.Fprintln(hintOut, "Press 'q' or Ctrl+C to exit")
 
 	// Connect to the system access point websocket
-	timeout := time.Duration(config.Timeout) * time.Second
 	go func() {
-		shutdown <- sysAp.ConnectWebSocket(ctx, config.MaxReconnectionAttempts, config.ExponentialBackoff, timeout)
+		shutdown <- monitorConnectWebSocket(ctx, sysAp, config)
 	}()
 
 	// Handle both forced shutdown and WebSocket connection errors

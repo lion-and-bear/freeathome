@@ -7,6 +7,10 @@ import (
 	"testing"
 )
 
+const (
+	errMsgExpectedNoLogOutputGot = "Expected no log output, got: %s"
+)
+
 // TestSystemAccessPointDefaultLogger tests the default logger functionality of SystemAccessPoint.
 func TestSystemAccessPointDefaultLogger(t *testing.T) {
 	// Create a buffer to capture log output
@@ -38,11 +42,27 @@ func TestNoConfigErrors(t *testing.T) {
 // TestMustNewSystemAccessPoint tests that MustNewSystemAccessPoint panics when a nil config is passed to NewSystemAccessPoint.
 func TestMustNewSystemAccessPoint(t *testing.T) {
 	defer func() {
-		if r := recover(); r == nil {
+		if recover() == nil {
 			t.Errorf("Expected panic, got nil")
 		}
 	}()
 	MustNewSystemAccessPoint(nil)
+}
+
+func TestSystemAccessPointWebSocketRawOutputGetter(t *testing.T) {
+	sysAp, _, _ := setupSysAp(t, true, false)
+	if sysAp.GetWebSocketRawOutput() != nil {
+		t.Fatal("expected nil before set")
+	}
+	var buf bytes.Buffer
+	sysAp.SetWebSocketRawOutput(&buf)
+	if sysAp.GetWebSocketRawOutput() != &buf {
+		t.Fatal("getter should return configured writer")
+	}
+	sysAp.SetWebSocketRawOutput(nil)
+	if sysAp.GetWebSocketRawOutput() != nil {
+		t.Fatal("expected nil after clear")
+	}
 }
 
 // TestSystemAccessPointGetHostName tests the GetHostName method of SystemAccessPoint.
@@ -55,7 +75,7 @@ func TestSystemAccessPointGetHostName(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual host name matches the expected host name
@@ -74,7 +94,7 @@ func TestSystemAccessPointGetTlsEnabled(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual TLS enabled status matches the expected status
@@ -93,7 +113,7 @@ func TestSystemAccessPointGetSkipTLSVerify(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual skip TLS verify status matches the expected status
@@ -131,7 +151,7 @@ func TestSystemAccessPointGetVerboseErrors(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual verbose errors status matches the expected status
@@ -149,7 +169,7 @@ func TestSystemAccessPointGetUrlWithoutTls(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual URL matches the expected URL
@@ -168,7 +188,7 @@ func TestSystemAccessPointGetUrlWithTls(t *testing.T) {
 	// Check if the log output is empty
 	logOutput := buf.String()
 	if logOutput != "" {
-		t.Errorf("Expected no log output, got: %s", logOutput)
+		t.Errorf(errMsgExpectedNoLogOutputGot, logOutput)
 	}
 
 	// Check if the actual URL matches the expected URL

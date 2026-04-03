@@ -216,7 +216,9 @@ func (ws *SystemAccessPointWebSocket) webSocketMessageLoop(ctx context.Context, 
 			}
 
 			// Pipe the message to the message handler
-			ws.sysAp.config.Logger.Debug("received text message from web socket")
+			if ws.sysAp.config.WebSocketRawOutput == nil {
+				ws.sysAp.config.Logger.Debug("received text message from web socket")
+			}
 			select {
 			case webSocketMessageChannel <- message:
 				// Message sent successfully
@@ -296,6 +298,15 @@ func (ws *SystemAccessPointWebSocket) processMessage(message []byte) {
 			ws.onMessageHandled()
 		}
 	}()
+
+	if w := ws.sysAp.config.WebSocketRawOutput; w != nil {
+		out := append(append([]byte(nil), message...), '\n')
+		if _, err := w.Write(out); err != nil {
+			ws.sysAp.config.Logger.Error("failed to write raw web socket message", "error", err)
+			ws.sysAp.emitError(err)
+		}
+		return
+	}
 
 	// Unmarshal the message into a WebSocketMessage struct
 	var msg models.WebSocketMessage

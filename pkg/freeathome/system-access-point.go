@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"regexp"
 
 	"github.com/go-resty/resty/v2"
@@ -30,6 +31,9 @@ type Config struct {
 	Logger models.Logger
 	// Client is the REST client to use (optional, will create default if nil)
 	Client *resty.Client
+	// WebSocketRawOutput, when non-nil, receives each WebSocket text frame as written on the wire
+	// plus a trailing newline; datapoint parsing and structured logs for that frame are skipped.
+	WebSocketRawOutput io.Writer
 }
 
 // NewConfig creates a new Config with default values
@@ -136,6 +140,17 @@ func (sysAp *SystemAccessPoint) GetVerboseErrors() bool {
 	return sysAp.config.VerboseErrors
 }
 
+// SetWebSocketRawOutput sets the writer that receives raw WebSocket text frames (see Config.WebSocketRawOutput).
+// Pass nil to disable.
+func (sysAp *SystemAccessPoint) SetWebSocketRawOutput(w io.Writer) {
+	sysAp.config.WebSocketRawOutput = w
+}
+
+// GetWebSocketRawOutput returns the configured writer for raw WebSocket text frames, or nil if disabled.
+func (sysAp *SystemAccessPoint) GetWebSocketRawOutput() io.Writer {
+	return sysAp.config.WebSocketRawOutput
+}
+
 // GetUrl constructs a URL string for the SystemAccessPoint based on the provided path.
 // It uses the appropriate protocol (http or https) depending on whether TLS is enabled.
 //
@@ -227,7 +242,7 @@ func (sysAp *SystemAccessPoint) GetDevice(serial string) (*models.DeviceResponse
 //
 //	*models.Datapoint - The retrieved datapoint object.
 //	error             - An error if the request or parsing fails.
-func (sysAp *SystemAccessPoint) GetDatapoint(serial string, channel string, datapoint string) (*models.GetDataPointResponse, error) {
+func (sysAp *SystemAccessPoint) GetDatapoint(serial, channel, datapoint string) (*models.GetDataPointResponse, error) {
 	resp, err := sysAp.config.Client.R().
 		SetPathParams(map[string]string{"uuid": sysAp.UUID, "serial": serial, "channel": channel, "datapoint": datapoint}).
 		Get(sysAp.GetUrl("datapoint/{uuid}/{serial}.{channel}.{datapoint}"))
@@ -249,7 +264,7 @@ func (sysAp *SystemAccessPoint) GetDatapoint(serial string, channel string, data
 //
 //	*models.SetDataPointResponse - The response from the SysAP after setting the datapoint.
 //	error                        - An error if the request fails or the response cannot be parsed.
-func (sysAp *SystemAccessPoint) SetDatapoint(serial string, channel string, datapoint string, value string) (*models.SetDataPointResponse, error) {
+func (sysAp *SystemAccessPoint) SetDatapoint(serial, channel, datapoint, value string) (*models.SetDataPointResponse, error) {
 	resp, err := sysAp.config.Client.R().
 		SetPathParams(map[string]string{"uuid": sysAp.UUID, "serial": serial, "channel": channel, "datapoint": datapoint}).
 		SetBody(value).
@@ -270,7 +285,7 @@ func (sysAp *SystemAccessPoint) SetDatapoint(serial string, channel string, data
 // Returns:
 //   - *models.DeviceResponse: The response from the device if the action is successful.
 //   - error: An error if the request fails or the response cannot be parsed.
-func (sysAp *SystemAccessPoint) TriggerProxyDevice(class string, serial string, action string) (*models.DeviceResponse, error) {
+func (sysAp *SystemAccessPoint) TriggerProxyDevice(class, serial, action string) (*models.DeviceResponse, error) {
 	resp, err := sysAp.config.Client.R().
 		SetPathParams(map[string]string{"uuid": sysAp.UUID, "class": class, "serial": serial, "action": action}).
 		Get(sysAp.GetUrl("proxydevice/{uuid}/{class}/{serial}/action/{action}"))
@@ -289,7 +304,7 @@ func (sysAp *SystemAccessPoint) TriggerProxyDevice(class string, serial string, 
 // Returns:
 //   - *models.DeviceResponse: The response from the device if the operation is successful.
 //   - error: An error if the request fails or the response cannot be parsed.
-func (sysAp *SystemAccessPoint) SetProxyDeviceValue(class string, serial string, value string) (*models.DeviceResponse, error) {
+func (sysAp *SystemAccessPoint) SetProxyDeviceValue(class, serial, value string) (*models.DeviceResponse, error) {
 	resp, err := sysAp.config.Client.R().
 		SetPathParams(map[string]string{"uuid": sysAp.UUID, "class": class, "serial": serial, "value": value}).
 		Put(sysAp.GetUrl("proxydevice/{uuid}/{class}/{serial}/value/{value}"))

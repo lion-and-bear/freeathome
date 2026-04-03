@@ -106,8 +106,13 @@ export FREEATHOME_PASSWORD=mypass
 ##### Real-time Monitoring
 
 ```sh
-# Monitor real-time events
+# Monitor real-time events (structured datapoint lines on stderr via logs)
 ./fh monitor
+
+# Stream raw WebSocket text frames to stdout (one JSON line per message); hints and logs on stderr
+./fh monitor --raw
+# Example: parse JSON lines (stderr shows connection logs)
+./fh monitor --raw 2>/dev/null | head -n 5
 
 # Monitor with custom settings
 ./fh monitor --timeout 60 --max-reconnection-attempts 5 --exponential-backoff
