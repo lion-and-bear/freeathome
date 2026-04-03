@@ -71,7 +71,8 @@ func Monitor(config MonitorCommandConfig) error {
 			default:
 				char, _, err := reader.ReadRune()
 				if err != nil {
-					break
+					// break would only exit the select; EOF or any read error must end the goroutine
+					return
 				}
 				if char == 'q' || char == 'Q' {
 					// Send SIGINT to trigger graceful shutdown
