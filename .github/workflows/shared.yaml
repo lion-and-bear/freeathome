@@ -11,7 +11,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26
+          go-version: 1.27
       - name: Run Go Build
         run: go build -o /dev/null -v ./...
 
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26
+          go-version: 1.27
       - name: Run Go Fmt
         run: go fmt ./...
 
@@ -37,7 +37,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26
+          go-version: 1.27
       - name: Run Go Vet
         run: go vet ./...
       - name: Install golangci-lint
@@ -58,7 +58,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26
+          go-version: 1.27
       - name: Install Go Coverage Merge
         run: go install github.com/wadey/gocovmerge@latest
       - name: Run Go Test
@@ -90,7 +90,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26
+          go-version: 1.27
       - name: Install Go Vuln Check
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
       - name: Run Go Mod Tidy
