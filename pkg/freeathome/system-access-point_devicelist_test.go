@@ -173,9 +173,6 @@ func TestSystemAccessPointGetDeviceListUnmarshalError(t *testing.T) {
 		t.Error(expectedNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal object into Go value of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "object")
 }

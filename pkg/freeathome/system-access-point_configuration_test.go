@@ -173,9 +173,6 @@ func TestSystemAccessPointGetConfigurationUnmarshalError(t *testing.T) {
 		t.Error(expectedNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal array into Go value of type models.SysAP"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[models.SysAP](t, err, "array")
 }
