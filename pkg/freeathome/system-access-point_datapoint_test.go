@@ -174,11 +174,8 @@ func TestSystemAccessPointGetDatapointUnmarshalError(t *testing.T) {
 		t.Fatal(expectedErrorGotNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal number into Go struct field GetDataPoint.values of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "number")
 }
 
 func TestSystemAccessPointSetDatapoint(t *testing.T) {
@@ -346,9 +343,6 @@ func TestSystemAccessPointSetDatapointUnmarshalError(t *testing.T) {
 		t.Fatal(expectedErrorGotNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal number into Go value of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "number")
 }
