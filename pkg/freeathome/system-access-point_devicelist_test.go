@@ -61,10 +61,10 @@ func TestSystemAccessPointGetDeviceList(t *testing.T) {
 // TestSystemAccessPointGetDeviceListCallError tests the GetDeviceList method of SystemAccessPoint
 func TestSystemAccessPointGetDeviceListCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 

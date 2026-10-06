@@ -61,10 +61,10 @@ func TestSystemAccessPointGetConfiguration(t *testing.T) {
 // TestSystemAccessPointGetConfigurationCallError tests the GetConfiguration method of SystemAccessPoint
 func TestSystemAccessPointGetConfigurationCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
