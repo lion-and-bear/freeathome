@@ -61,10 +61,10 @@ func TestSystemAccessPointGetConfiguration(t *testing.T) {
 // TestSystemAccessPointGetConfigurationCallError tests the GetConfiguration method of SystemAccessPoint
 func TestSystemAccessPointGetConfigurationCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
@@ -173,9 +173,6 @@ func TestSystemAccessPointGetConfigurationUnmarshalError(t *testing.T) {
 		t.Error(expectedNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal array into Go value of type models.SysAP"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[models.SysAP](t, err, "array")
 }

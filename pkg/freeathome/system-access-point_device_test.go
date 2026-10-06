@@ -63,10 +63,10 @@ func TestSystemAccessPointGetDevice(t *testing.T) {
 
 func TestSystemAccessPointGetDeviceCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
@@ -174,9 +174,6 @@ func TestSystemAccessPointGetDeviceUnmarshalError(t *testing.T) {
 		t.Fatal(expectedErrorGotNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal number into Go struct field Device.devices.nativeId of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "number")
 }

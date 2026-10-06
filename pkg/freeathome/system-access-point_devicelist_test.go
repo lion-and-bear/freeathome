@@ -61,10 +61,10 @@ func TestSystemAccessPointGetDeviceList(t *testing.T) {
 // TestSystemAccessPointGetDeviceListCallError tests the GetDeviceList method of SystemAccessPoint
 func TestSystemAccessPointGetDeviceListCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
@@ -173,9 +173,6 @@ func TestSystemAccessPointGetDeviceListUnmarshalError(t *testing.T) {
 		t.Error(expectedNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal object into Go value of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "object")
 }

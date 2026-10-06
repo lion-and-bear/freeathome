@@ -2,11 +2,14 @@ package freeathome
 
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
 	"io"
 	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"sync"
 	"testing"
@@ -70,6 +73,24 @@ const expectedErrorGotNil = "Expected error, got nil"
 const expectedErrorGotValue = "Expected error '%s', got '%v'"
 const expectedNil = "Expected nil result"
 const unexpectedLogOutput = "Unexpected log output, got: %s"
+
+// assertUnmarshalTypeError checks that err is a *json.UnmarshalTypeError for a JSON value of kind value
+// that could not be assigned to a Go value of type T. The error message itself is not compared, since its
+// wording differs between Go versions.
+func assertUnmarshalTypeError[T any](t *testing.T, err error, value string) {
+	t.Helper()
+
+	var typeErr *json.UnmarshalTypeError
+	if !errors.As(err, &typeErr) {
+		t.Fatalf("Expected *json.UnmarshalTypeError, got %T: %v", err, err)
+	}
+	if typeErr.Value != value {
+		t.Errorf("Expected JSON value '%s', got '%s'", value, typeErr.Value)
+	}
+	if expected := reflect.TypeFor[T](); typeErr.Type != expected {
+		t.Errorf("Expected Go type '%v', got '%v'", expected, typeErr.Type)
+	}
+}
 
 // setupSysAp initializes a SystemAccessPoint with a mock logger and returns it along with a buffer to capture log output.
 func setupSysAp(t *testing.T, tlsEnabled bool, skipTLSVerify bool) (*SystemAccessPoint, *ThreadSafeBuffer, chan slog.Record) {

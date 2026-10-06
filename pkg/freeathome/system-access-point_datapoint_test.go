@@ -63,10 +63,10 @@ func TestSystemAccessPointGetDatapoint(t *testing.T) {
 
 func TestSystemAccessPointGetDatapointCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
@@ -174,11 +174,8 @@ func TestSystemAccessPointGetDatapointUnmarshalError(t *testing.T) {
 		t.Fatal(expectedErrorGotNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal number into Go struct field GetDataPoint.values of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "number")
 }
 
 func TestSystemAccessPointSetDatapoint(t *testing.T) {
@@ -235,10 +232,10 @@ func TestSystemAccessPointSetDatapoint(t *testing.T) {
 
 func TestSystemAccessPointSetDatapointCallError(t *testing.T) {
 	sysAp, buf, _ := setupSysAp(t, true, false)
-	error := errors.New("Test Error")
+	testErr := errors.New("Test Error")
 	roundtripper := &MockRoundTripper{
 		Response: nil,
-		Err:      error,
+		Err:      testErr,
 	}
 	sysAp.config.Client.SetTransport(roundtripper)
 
@@ -346,9 +343,6 @@ func TestSystemAccessPointSetDatapointUnmarshalError(t *testing.T) {
 		t.Fatal(expectedErrorGotNil)
 	}
 
-	// Check if the error message is correct
-	expected := "json: cannot unmarshal number into Go value of type string"
-	if err.Error() != expected {
-		t.Errorf(expectedErrorGotValue, expected, err)
-	}
+	// Check if the error is the expected unmarshal type error
+	assertUnmarshalTypeError[string](t, err, "number")
 }
