@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.11.0] - 01.11.2026
+
+### Changed
+
+- Bump dependencies
+
 ## [v2.10.0] - 06.10.2026
 
 ### Changed
@@ -127,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Set proxy device value
 - [#16] Implemented monitor application covering the scope of the [JavaScript free@home Monitor](https://github.com/pgerke/freeathome-monitor)
 
-[Unreleased]: https://github.com/lion-and-bear/freeathome/compare/v2.10.0...HEAD
+[Unreleased]: https://github.com/lion-and-bear/freeathome/compare/v2.11.0...HEAD
+[v2.11.0]: https://github.com/lion-and-bear/freeathome/releases/tag/v2.11.0
 [v2.10.0]: https://github.com/lion-and-bear/freeathome/releases/tag/v2.10.0
 [v2.9.0]: https://github.com/lion-and-bear/freeathome/releases/tag/v2.9.0
 [v2.8.0]: https://github.com/lion-and-bear/freeathome/releases/tag/v2.8.0
